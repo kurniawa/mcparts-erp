@@ -6,12 +6,14 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import SessionFeedback from '@/Pages/Shared/SessionFeedback.vue';
 
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
     <div>
+        <SessionFeedback></SessionFeedback>
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -20,7 +22,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('home')">
                                     <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800"
                                     />
@@ -31,6 +33,12 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink :href="route('pembelians.index')" :active="route().current('pembelians.index')">
+                                    Pembelian
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.user.clearance_level >= 3" :href="route('initial_commands.index')" :active="route().current('initial_commands.index')">
+                                    Initial Commands
                                 </NavLink>
                             </div>
                         </div>
@@ -144,9 +152,18 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="p-2">
                 <slot />
             </main>
+
+            <div class="py-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-gray-900">Welcome, {{ $page.props.auth.user.username }}!</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
