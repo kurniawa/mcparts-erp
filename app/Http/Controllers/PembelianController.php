@@ -409,6 +409,17 @@ class PembelianController extends Controller
         // dd((float)$post['harga_t'][1]);
 
         // VALIDASI
+        if ($post['supplier']['id'] === null) {
+            // dump($post);
+            $feedback = [
+                'success_' => 'no supplier',
+                'warnings_' => 'no supplier'
+            ];
+            sleep(3);
+            return back()->with($feedback);
+            return back()->with('success_', 'no supplier');
+        }
+
         $request->validate([
             'day' => 'required',
             'month' => 'required',
@@ -578,7 +589,7 @@ class PembelianController extends Controller
         $pembelian_new->update([
             'nomor_nota' => $nomor_nota,
             'isi' => json_encode($isi),
-            'harga_total' => round((float)$post['harga_total'],2),
+            'harga_total' => $harga_total,
             // 'status_bayar' => $status_bayar,
             // 'keterangan_bayar' => $keterangan_bayar,
             // 'tanggal_lunas' => $tanggal_lunas,
