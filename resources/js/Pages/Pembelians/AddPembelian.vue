@@ -37,10 +37,11 @@ const toggleDatePicker = () => {
 
 watch(form, (value) => {
     // console.log(form.date);
-    // form.day = form.date.getDate();
-    // form.month = form.date.getMonth() + 1;
-    // form.year = form.date.getFullYear();
+    value.day = value.date.getDate();
+    value.month = value.date.getMonth() + 1;
+    value.year = value.date.getFullYear();
     // console.log(value);
+    // console.log(form);
 });
 // console.log(form);
 

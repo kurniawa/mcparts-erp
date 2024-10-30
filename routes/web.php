@@ -33,6 +33,8 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelians/{pembelian}/edit', 'edit')->name('pembelians.edit')->middleware(['auth', 'verified']);
     Route::post('/pembelians/{pembelian}/delete', 'delete')->name('pembelians.delete')->middleware(['auth', 'verified']);
     Route::post('/pembelians/store', 'store')->name('pembelians.store')->middleware(['auth', 'verified']);
+    Route::get('/barangs', 'index')->name('barangs.index')->middleware(['auth', 'verified']);
+
 });
 
 Route::controller(InitialCommand::class)->group(function () {
