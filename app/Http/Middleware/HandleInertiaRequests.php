@@ -27,26 +27,27 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-    public function share(Request $request): array
-    {
-        return [
-            ...parent::share($request),
-            'auth' => [
-                'user' => $request->user(),
-                // 'session' => [
-                //     'success_' => $request->session()->get('success_'),
-                //     'warnings_' => $request->session()->get('warnings_'),
-                //     'errors_' => $request->session()->get('errors_'),
-                // ],
-                // 'session' => $request->session()->get('session')
-            ],
-            'session' => function () use ($request) {
-                return [
-                    'success_' => $request->session()->get('success_'),
-                    'warnings_' => $request->session()->get('warnings_'),
-                    'errors_' => $request->session()->get('errors_'),
-                ];
-            },
-        ];
-    }
+        public function share(Request $request): array
+        {
+            return [
+                ...parent::share($request),
+                'auth' => [
+                    'user' => $request->user(),
+                    // 'session' => [
+                    //     'success_' => $request->session()->get('success_'),
+                    //     'warnings_' => $request->session()->get('warnings_'),
+                    //     'errors_' => $request->session()->get('errors_'),
+                    // ],
+                    // 'session' => $request->session()->get('session')
+                ],
+                'session' => function () use ($request) {
+                    return [
+                        'flash' => $request->session()->get('flash'),
+                        'success_' => $request->session()->get('success_'),
+                        'warnings_' => $request->session()->get('warnings_'),
+                        'errors_' => $request->session()->get('errors_'),
+                    ];
+                },
+            ];
+        }
 }

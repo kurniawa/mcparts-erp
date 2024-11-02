@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({
     session: Object
@@ -70,6 +71,23 @@ const submitCancelBarangsNumbersDataTimes100 = () => {
         form.post(route('initial_commands.cancel_barangs_numbers_data_times_100'), {preserveScroll:true});
     }
 }
+
+const flashMessage = ref(props.session.flash?.message || ''); // Mengambil pesan flash jika ada
+
+const updateClearanceLevel = () => {
+    const sure = confirm('Anda yakin ingin update clearance level dari masing-masing user?');
+    if (sure) {
+        form.post(route('initial_commands.update_clearance_level'), {
+            onSuccess: () => {
+                // flashMessage.value = 'onSuccess dijalankan'; // Update pesan jika perlu
+            },
+            onError: (errors) => {
+                console.error(errors);
+            },
+        });
+    }
+};
+
 </script>
 <template>
     <AuthenticatedLayout>
@@ -79,13 +97,23 @@ const submitCancelBarangsNumbersDataTimes100 = () => {
         <ol class="list-decimal list-inside">
             <li>php artisan migrate --path=/database/migrations/0001_01_01_000000_create_users_table.php</li>
             <li>php artisan migrate --path=/database/migrations/0001_01_01_000001_create_cache_table.php</li>
-            <li>php artisan migrate --path=/database/migrations/0001_01_01_000002_create_jobs_table</li>
+            <!-- <li>php artisan migrate --path=/database/migrations/0001_01_01_000002_create_jobs_table</li> -->
             <li class="p-2">
                 Pada table user
                 <ul class="list-disc list-inside">
                     <li>add column clearance_level, tinyInteger, length:1, unsigned, default:1</li>
                     <li>update clearance_level dari setiap user</li>
                 </ul>
+                <div>
+                    <form @submit.prevent="updateClearanceLevel">
+                        <button type="submit" class="bg-orange-300 text-white font-bold p-2 rounded">Update Clearance Level</button>
+                    </form>
+
+                    <div v-if="flashMessage" class="alert alert-success">
+                        {{ flashMessage }}
+                    </div>
+                </div>
+                
             </li>
             <li class="p-2">
                 Pada tabel nota:

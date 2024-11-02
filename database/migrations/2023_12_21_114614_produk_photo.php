@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::create('produk_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('produk_id')->constrained()->onDelete('cascade');
-            $table->foreignId('photo_id')->constrained()->onDelete('cascade');
-            $table->string('role', 20)->default('subsidiary'); // default or subsidiary
-        });
+        if (!Schema::hasTable('produk_photos')) {
+            Schema::create('produk_photos', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('produk_id')->constrained()->onDelete('cascade');
+                $table->foreignId('photo_id')->constrained()->onDelete('cascade');
+                $table->string('role', 20)->default('subsidiary'); // default or subsidiary
+            });
+        }
     }
 
     /**

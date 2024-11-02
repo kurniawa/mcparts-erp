@@ -21,3 +21,5 @@ yarn-error.log
 .htaccess
 .HTACCESS
 composer.lock
+vendor.zip
+/database/sql

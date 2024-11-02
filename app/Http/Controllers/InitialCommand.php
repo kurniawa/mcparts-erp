@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Pembelian;
 use App\Models\PembelianBarang;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Inertia\Inertia;
 
 class InitialCommand extends Controller
@@ -166,6 +168,7 @@ class InitialCommand extends Controller
             if ($barang->harga_sub) {
                 $harga_sub = (string)((int)$barang->harga_sub / 100);
             }
+
             if ($barang->harga_total_sub) {
                 $harga_total_sub = (string)((int)$barang->harga_total_sub / 100);
             }
@@ -184,6 +187,50 @@ class InitialCommand extends Controller
             'warnings_' => '-perkalian 100 pada barangs: numbers_data dibatalkan-'
         ];
 
+        return back()->with($feedback);
+    }
+
+    // public function migrateMultipleTables()
+    // {
+    //     // Menjalankan migrasi untuk tabel users
+    //     Artisan::call('migrate', [
+    //         '--path' => 'database/migrations/0001_01_01_000000_create_users_table.php',
+    //     ]);
+
+    //     // Mendapatkan output dari perintah
+    //     $outputUsers = Artisan::output();
+
+    //     // Menjalankan migrasi untuk tabel cache
+    //     Artisan::call('migrate', [
+    //         '--path' => 'database/migrations/0001_01_01_000001_create_cache_table.php',
+    //     ]);
+
+    //     // Mendapatkan output dari perintah
+    //     $outputCache = Artisan::output();
+
+    //     return response()->json([
+    //         'output_users' => $outputUsers,
+    //         'output_cache' => $outputCache,
+    //     ]);
+    // }
+
+    function update_clearance_level() {
+        User::find(1)->update(['clearance_level' => '5']);
+        User::find(2)->update(['clearance_level' => '3']);
+        User::find(6)->update(['clearance_level' => '2']);
+        User::find(7)->update(['clearance_level' => '2']);
+
+        // Menyimpan flash message dalam session
+        // session()->flash('message', 'Clearance level updated successfully.');
+
+        // Kembali ke halaman sebelumnya
+        // return back();
+        // return Inertia::location(route('initial_commands.index'));
+        // return back()->with(['flash' => ['message' => 'Clearance level updated successfully.']]);
+        $feedback = [
+            'flash' => ['message' => 'Flash Message is working'],
+            'success_' => 'Clearance level updated successfully.'
+        ];
         return back()->with($feedback);
     }
 }

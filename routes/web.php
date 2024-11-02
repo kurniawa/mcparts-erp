@@ -39,6 +39,7 @@ Route::controller(PembelianController::class)->group(function () {
 
 Route::controller(InitialCommand::class)->group(function () {
     Route::get('/initial-commands/index', 'index')->name('initial_commands.index')->middleware(['auth', 'verified', 'superadmin']);
+    Route::post('/initial-commands/update_clearance_level', 'update_clearance_level')->name('initial_commands.update_clearance_level')->middleware(['auth', 'verified', 'superadmin']);
     Route::post('/initial-commands/pembelians_numbers_data_times_100', 'pembelians_numbers_data_times_100')->name('initial_commands.pembelians_numbers_data_times_100')->middleware(['auth', 'verified', 'superadmin']); 
     Route::post('/initial-commands/cancel_pembelians_numbers_data_times_100', 'cancel_pembelians_numbers_data_times_100')->name('initial_commands.cancel_pembelians_numbers_data_times_100')->middleware(['auth', 'verified', 'superadmin']); 
     Route::post('/initial-commands/update_pembelian_status_bayar', 'update_pembelian_status_bayar')->name('initial_commands.update_pembelian_status_bayar')->middleware(['auth', 'verified', 'superadmin']);

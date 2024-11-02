@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
-            $table->id();
-            $table->string('path');
-        });
+        if (!Schema::hasTable('photos')) {
+            Schema::create('photos', function (Blueprint $table) {
+                $table->id();
+                $table->string('path');
+            });
+        }
     }
 
     /**
