@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import { DatePicker } from 'v-calendar';
 import { reactive, ref, watch } from 'vue';
 import AutoComplete from '../Shared/AutoComplete.vue';
-import {formatNumberDecID, formatCurrencyID} from '../../../../public/js/functions.js'
+import {formatNumberDecIDw100, formatCurrencyIDw100} from '../../../../public/js/functions.js'
 
 const props = defineProps({
     label_suppliers: Object,
@@ -71,10 +71,10 @@ const chooseItem = (chosen) => {
         form.barang[chosen.index].harga_sub = chosen.res.harga_sub;
         form.barang[chosen.index].harga_total_main = chosen.res.harga_total_main;
 
-        form.barang[chosen.index].jumlah_main_formatted = formatNumberDecID(chosen.res.jumlah_main);
-        form.barang[chosen.index].jumlah_sub_formatted = formatNumberDecID(chosen.res.jumlah_sub);
-        form.barang[chosen.index].harga_main_formatted = formatNumberDecID(chosen.res.harga_main);
-        form.barang[chosen.index].harga_total_main_formatted = formatNumberDecID(chosen.res.harga_total_main);
+        form.barang[chosen.index].jumlah_main_formatted = formatNumberDecIDw100(chosen.res.jumlah_main);
+        form.barang[chosen.index].jumlah_sub_formatted = formatNumberDecIDw100(chosen.res.jumlah_sub);
+        form.barang[chosen.index].harga_main_formatted = formatNumberDecIDw100(chosen.res.harga_main);
+        form.barang[chosen.index].harga_total_main_formatted = formatNumberDecIDw100(chosen.res.harga_total_main);
 
         countHargaTotal();
     } catch (error) {
@@ -98,30 +98,30 @@ const add_item_element = () => {
 }
 
 const changeJumlahMain = (i) => {
-    form.barang[i].jumlah_main = form.barang[i].jumlah_main_formatted * 100;
-    form.barang[i].jumlah_main_formatted = formatNumberDecID(form.barang[i].jumlah_main);
+    form.barang[i].jumlah_main = form.barang[i].jumlah_main_formatted;
+    form.barang[i].jumlah_main_formatted = formatNumberDecIDw100(form.barang[i].jumlah_main);
     // list_item_pembelian
     // console.log(form.barang[i]);
-    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub / 100) * (form.barang[i].jumlah_main / 100);
-    form.barang[i].harga_total_main_formatted = formatNumberDecID(form.barang[i].harga_total_main);
+    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub) * (form.barang[i].jumlah_main);
+    form.barang[i].harga_total_main_formatted = formatNumberDecIDw100(form.barang[i].harga_total_main);
     countHargaTotal();
 }
 
 const changeJumlahSub = (i) => {
-    form.barang[i].jumlah_sub = form.barang[i].jumlah_sub_formatted * 100;
-    form.barang[i].jumlah_sub_formatted = formatNumberDecID(form.barang[i].jumlah_sub);
+    form.barang[i].jumlah_sub = form.barang[i].jumlah_sub_formatted;
+    form.barang[i].jumlah_sub_formatted = formatNumberDecIDw100(form.barang[i].jumlah_sub);
 
-    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub / 100) * (form.barang[i].jumlah_main / 100);
-    form.barang[i].harga_total_main_formatted = formatNumberDecID(form.barang[i].harga_total_main);
+    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub) * (form.barang[i].jumlah_main);
+    form.barang[i].harga_total_main_formatted = formatNumberDecIDw100(form.barang[i].harga_total_main);
     countHargaTotal();
 }
 
 const changeHargaMain = (i) => {
-    form.barang[i].harga_main = form.barang[i].harga_main_formatted * 100;
-    form.barang[i].harga_main_formatted = formatNumberDecID(form.barang[i].harga_main);
+    form.barang[i].harga_main = form.barang[i].harga_main_formatted;
+    form.barang[i].harga_main_formatted = formatNumberDecIDw100(form.barang[i].harga_main);
 
-    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub / 100) * (form.barang[i].jumlah_main / 100);
-    form.barang[i].harga_total_main_formatted = formatNumberDecID(form.barang[i].harga_total_main);
+    form.barang[i].harga_total_main = form.barang[i].harga_main * (form.barang[i].jumlah_sub) * (form.barang[i].jumlah_main);
+    form.barang[i].harga_total_main_formatted = formatNumberDecIDw100(form.barang[i].harga_total_main);
     countHargaTotal();
 }
 
@@ -129,10 +129,10 @@ const countHargaTotal = () => {
     // console.log('countHargaTotal');
     form.harga_total_all = 0;
     form.barang.forEach(barang => {
-        let harga_total_main = (barang.jumlah_sub / 100) * (barang.jumlah_main / 100) * barang.harga_main
+        let harga_total_main = (barang.jumlah_sub) * (barang.jumlah_main) * barang.harga_main
         form.harga_total_all += harga_total_main;
     });
-    form.harga_total_all_formatted = formatCurrencyID(form.harga_total_all);
+    form.harga_total_all_formatted = formatCurrencyIDw100(form.harga_total_all);
 }
 
 const submitAddPembelian = () => {

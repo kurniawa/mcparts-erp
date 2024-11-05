@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::table('notas', function (Blueprint $table) {
             // Menambahkan kolom sisa_bayar
             if (!Schema::hasColumn('notas', 'sisa_bayar')) {
-                $table->bigInteger('sisa_bayar')->default(0)->notNullable();
+                $table->decimal('sisa_bayar', 15, 2)->nullable();
             }
 
             // Mengubah tipe data kolom jumlah_total menjadi mediumInteger
             $table->mediumInteger('jumlah_total')->change();
             // Mengubah tipe data kolom harga_total menjadi bigInteger
-            $table->bigInteger('harga_total')->change();
+            // $table->bigInteger('harga_total')->change();
 
             // Menambahkan kolom tanggal_lunas dengan tipe data timestamp
             if (!Schema::hasColumn('notas', 'tanggal_lunas')) {

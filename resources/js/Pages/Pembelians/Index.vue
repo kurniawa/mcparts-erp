@@ -222,8 +222,8 @@ const toggleAddPembelian = () => {
                                             <td>{{ pembelian.nomor_nota }}</td>
                                             <td>{{ pembelian_barang.barang_nama }}</td>
                                             <td>{{ pembelian.keterangan_bayar }}</td>
-                                            <td>{{ pembelian_barang.jumlah_sub / 100 }} {{ pembelian_barang.satuan_sub }}</td>
-                                            <td>{{ pembelian_barang.jumlah_main / 100 }} {{ pembelian_barang.satuan_main }}</td>
+                                            <td>{{ pembelian_barang.jumlah_sub }} {{ pembelian_barang.satuan_sub }}</td>
+                                            <td>{{ pembelian_barang.jumlah_main }} {{ pembelian_barang.satuan_main }}</td>
                                             <td>{{ pembelian_barang.harga_main }}</td>
                                             <td>{{ pembelian_barang.harga_t }}</td>
                                         </tr>

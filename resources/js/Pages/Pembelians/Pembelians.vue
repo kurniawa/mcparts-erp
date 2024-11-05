@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import {formatCurrencyID, formatNumberDecID} from '../../../../public/js/functions.js'
+import {formatCurrencyIDw100, formatNumberDecIDw100} from '../../../../public/js/functions.js'
 const props = defineProps({
     pembelians: Object,
     pembelian_barangs_all: Object,
@@ -15,13 +15,6 @@ const form = useForm({});
 
 const from_dateOnly = new Date(props.from).toLocaleDateString("id-ID");
 const until_dateOnly = new Date(props.until).toLocaleDateString("id-ID");
-
-// const formatCurrencyID = (number) => {
-//     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
-// }
-
-// console.log(formatCurrencyID("123455"));
-// console.log(formatCurrencyID("123400"));
 
 const deletePembelian = (id) => {
     const sure = confirm('Anda yakin ingin hapus pembelian ini?');
@@ -45,16 +38,16 @@ const deletePembelian = (id) => {
             <div class="">
                 <div class="grid grid-cols-12">
                     <div class="col-span-2">Grand Total</div>
-                    <div class="col-span-4">{{ formatCurrencyID(grand_total - lunas_total) }}</div>
-                    <div class="col-span-3">{{ formatCurrencyID(lunas_total) }}</div>
-                    <div class="col-span-3">{{ formatCurrencyID(grand_total) }}</div>
+                    <div class="col-span-4">{{ formatCurrencyIDw100(grand_total - lunas_total) }}</div>
+                    <div class="col-span-3">{{ formatCurrencyIDw100(lunas_total) }}</div>
+                    <div class="col-span-3">{{ formatCurrencyIDw100(grand_total) }}</div>
                 </div>    
             </div>
             <div v-for="(pembelian, index) in pembelians">
                 <div tabindex="0" class="collapse border-b border-base-300">
                     <input type="checkbox" :id="'checkbox-'+index">
 
-                    <div class="collapse-title w-screen">
+                    <div class="collapse-title w-full">
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2">
                                 <div class="flex">
@@ -101,7 +94,7 @@ const deletePembelian = (id) => {
                             </div>
                             <div class="col-span-3">
                                 <div class="flex justify-between font-semibold items-center">
-                                    <span>{{ formatCurrencyID(pembelian.harga_total) }}</span>
+                                    <span>{{ formatCurrencyIDw100(pembelian.harga_total) }}</span>
                                     <label :for="'checkbox-'+index" class="hover:cursor-pointer flex">
                                         <div class="border p-1 rounded">></div>
                                     </label>
@@ -117,23 +110,23 @@ const deletePembelian = (id) => {
                                     <td><div class="min-w-max">{{ pembelian_barang.barang_nama }}</div></td>
                                     <td>
                                         <div v-if="pembelian_barang.satuan_sub" class="min-w-max">
-                                            {{ formatNumberDecID(pembelian_barang.jumlah_sub) }} {{ pembelian_barang.satuan_sub }}
+                                            {{ formatNumberDecIDw100(pembelian_barang.jumlah_sub) }} {{ pembelian_barang.satuan_sub }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="min-w-max">
-                                            {{ formatNumberDecID(pembelian_barang.jumlah_main) }} {{ pembelian_barang.satuan_main }}
+                                            {{ formatNumberDecIDw100(pembelian_barang.jumlah_main) }} {{ pembelian_barang.satuan_main }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="min-w-max">
-                                            {{ formatCurrencyID(pembelian_barang.harga_main) }} /{{ pembelian_barang.satuan_main }}
+                                            {{ formatCurrencyIDw100(pembelian_barang.harga_main) }} /{{ pembelian_barang.satuan_main }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="flex justify-between">
                                             <span>Rp</span>
-                                            {{ formatCurrencyID(pembelian_barang.harga_t) }}
+                                            {{ formatCurrencyIDw100(pembelian_barang.harga_t) }}
                                         </div>
                                     </td>
                                     <td>
@@ -153,7 +146,7 @@ const deletePembelian = (id) => {
                                         <div v-if="!pembelians[index].isi">
                                             Content:
                                             <span v-for="isi in pembelians[index].isi">
-                                            -- {{ formatNumberDecID(isi.jumlah) }} {{ isi.satuan }}
+                                            -- {{ formatNumberDecIDw100(isi.jumlah) }} {{ isi.satuan }}
                                             </span>
                                         </div>
                                     </td>
@@ -161,7 +154,7 @@ const deletePembelian = (id) => {
                                     <td>
                                         <div class="flex justify-between font-semibold">
                                             <span>Rp</span>
-                                            {{ formatCurrencyID(pembelians[index].harga_total) }}
+                                            {{ formatCurrencyIDw100(pembelians[index].harga_total) }}
                                             <span>,-</span>
                                         </div>
                                     </td>

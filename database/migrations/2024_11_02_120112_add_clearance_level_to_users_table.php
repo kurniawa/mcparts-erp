@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->tinyInteger('clearance_level')->unsigned()->default(1);
             }
         });
+
     }
 
     /**

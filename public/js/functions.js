@@ -51,11 +51,20 @@ const formatNumberDecID = (num) => {
 }
 
 function formatCurrencyIDw100(num) {
+    // console.log(num);
     num = num.toString();
     if (num.includes(".")) {
         num = num.split(".");
         num[0] = parseFloat(num[0]).toLocaleString("id-ID", {style: "decimal",});
-        num = `${num[0]},${num[1]}`
+
+        if (num[1] == '00') {
+            num = `${num[0]},-`;
+        } else if(num[1].length === 1) {
+            num = `${num[0]},${num[1]}0`;
+        } else {
+            num = `${num[0]},${num[1]}`;
+        }
+
     } else {
         num = parseFloat(num).toLocaleString("id-ID", {style: "decimal",});
         num = `${num},-`;
@@ -69,7 +78,12 @@ const formatNumberDecIDw100 = (num) => {
     if (num.includes(".")) {
         num = num.split(".");
         num[0] = parseFloat(num[0]).toLocaleString("id-ID", {style: "decimal",});
-        num = `${num[0]},${num[1]}`
+
+        if (num[1] == '00') {
+            num = `${num[0]}`;
+        } else {
+            num = `${num[0]},${num[1]}`;
+        }
     } else {
         num = parseFloat(num).toLocaleString("id-ID", {style: "decimal",});
     }

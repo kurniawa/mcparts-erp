@@ -457,37 +457,37 @@ class PembelianController extends Controller
         for ($i=0; $i < count($post['barang']); $i++) {
             $barang = Barang::find($post['barang'][$i]['id']);
             $harga_main = $post['barang'][$i]['harga_main'];
-            if (!is_string($harga_main)) {
-                $harga_main = (string)$harga_main;
-            }
+            // if (!is_string($harga_main)) {
+            //     $harga_main = (string)$harga_main;
+            // }
             $jumlah_sub = null;
             $satuan_sub = $barang->satuan_sub;
             $harga_sub = null;
             if ($satuan_sub !== null) {
                 $jumlah_sub = $post['barang'][$i]['jumlah_sub'];
-                if (!is_string($jumlah_sub)) {
-                    $jumlah_sub = (string)$jumlah_sub;
-                }
+                // if (!is_string($jumlah_sub)) {
+                //     $jumlah_sub = (string)$jumlah_sub;
+                // }
                 $harga_sub = $post['barang'][$i]['harga_sub'];
-                if (!is_string($harga_sub)) {
-                    $harga_sub = (string)$harga_sub;
-                }
+                // if (!is_string($harga_sub)) {
+                //     $harga_sub = (string)$harga_sub;
+                // }
             }
 
             $satuan_main = $barang->satuan_main;
             $jumlah_main = $post['barang'][$i]['jumlah_main'];
             $harga_main = $post['barang'][$i]['harga_main'];
-            if (!is_string($jumlah_main)) {
-                $jumlah_main = (string)$jumlah_main;
-            }
-            if (!is_string($harga_main)) {
-                $harga_main = (string)$harga_main;
-            }
+            // if (!is_string($jumlah_main)) {
+            //     $jumlah_main = (string)$jumlah_main;
+            // }
+            // if (!is_string($harga_main)) {
+            //     $harga_main = (string)$harga_main;
+            // }
             $harga_t = $post['barang'][$i]['harga_total_main'];
-            if (is_string($harga_t)) {
-                $harga_t = (string)$harga_t;
-            }
-
+            // if (is_string($harga_t)) {
+            //     $harga_t = (string)$harga_t;
+            // }
+            
             $pembelian_barang = PembelianBarang::create([
                 'pembelian_id' => $pembelian_new->id,
                 'barang_id' => $barang->id,
@@ -515,7 +515,7 @@ class PembelianController extends Controller
             if (count($isi) != 0) {
                 for ($j=0; $j < count($isi); $j++) {
                     if ($isi[$j]['satuan'] == $pembelian_barang->satuan_main) {
-                        $isi[$j]['jumlah'] = (int)$isi[$j]['jumlah'] + (int)($pembelian_barang->jumlah_main);
+                        $isi[$j]['jumlah'] = (float)$isi[$j]['jumlah'] + (float)($pembelian_barang->jumlah_main);
                         // dump($isi[$j]['jumlah']);
                         // dump($pembelian_barang->jumlah_main);
                         // dump('isi:');
@@ -523,7 +523,7 @@ class PembelianController extends Controller
                         $exist_satuan_main = true;
                     }
                     if ($isi[$j]['satuan'] == $pembelian_barang->satuan_sub) {
-                        $isi[$j]['jumlah'] = (int)$isi[$j]['jumlah'] + (int)($pembelian_barang->jumlah_sub);
+                        $isi[$j]['jumlah'] = (float)$isi[$j]['jumlah'] + (float)($pembelian_barang->jumlah_sub);
                         $exist_satuan_sub = true;
                     }
                 }
@@ -549,7 +549,7 @@ class PembelianController extends Controller
                 // ]);
                 $isi[]=[
                     'satuan' => $pembelian_barang->satuan_main,
-                    'jumlah' => (int)($pembelian_barang->jumlah_main),
+                    'jumlah' => (float)($pembelian_barang->jumlah_main),
                 ];
                 // dump('first isi:');
                 // dump((int)($pembelian_barang->jumlah_main));
@@ -562,7 +562,7 @@ class PembelianController extends Controller
                     // ]);
                     $isi[]=[
                         'satuan' => $pembelian_barang->satuan_sub,
-                        'jumlah' => (int)($pembelian_barang->jumlah_sub),
+                        'jumlah' => (float)($pembelian_barang->jumlah_sub),
                     ];
                 }
             }
@@ -582,9 +582,9 @@ class PembelianController extends Controller
         }
 
         $harga_total = $post['harga_total_all'];
-        if (!is_string($harga_total)) {
-            $harga_total = (string)$harga_total;
-        }
+        // if (!is_string($harga_total)) {
+        //     $harga_total = (string)$harga_total;
+        // }
 
         $pembelian_new->update([
             'nomor_nota' => $nomor_nota,
