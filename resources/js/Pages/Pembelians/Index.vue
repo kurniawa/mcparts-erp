@@ -91,7 +91,7 @@ const toggleAddPembelian = () => {
         </template> -->
 
         <div class="relative rounded">
-            <Tab :tabs="['pembelians.index', 'barangs.index']" :titles="['Pembelian', 'Barang']">
+            <Tab :tabs="['pembelians.index', 'produks.index']" :titles="['Pembelian', 'Barang']">
                 <div class="relative bg-white border-t z-10">
                     <div class="">
                         <!-- SEARCH / FILTER -->
@@ -99,7 +99,6 @@ const toggleAddPembelian = () => {
                         <!-- END - SEARCH / FILTER -->
                         <div class="flex mt-2 text-xs ml-2">
                             <button type="button" :class="class_for_btn_add_pembelian" @click="toggleAddPembelian">+ Tambah Pembelian</button>
-                            <button type="button" class="border rounded border-indigo-300 text-indigo-500 font-semibold px-3 py-1 ml-1" id="btn_new_barang" onclick="toggle_light(this.id, 'form_new_barang', [], ['bg-indigo-200'], 'block')">+ Barang</button>
                         </div>
                     </div>
                     <!-- FORM_NEW_PEMBELIAN -->
@@ -107,85 +106,6 @@ const toggleAddPembelian = () => {
                          <AddPembelian :label_suppliers="label_suppliers" :label_barang="label_barang"/>
                      </div>
                     <!-- END - FORM_NEW_PEMBELIAN -->
-                    <!-- FORM_NEW_BARANG -->
-                    <div id="form_new_barang" class="hidden">
-                        <div class="flex justify-center">
-                            <form @submit.prevent="submitBarangStore" class="border rounded border-indigo-300 p-1 mt-1 lg:w-3/5 md:w-3/4">
-                                <table class="text-xs w-full">
-                                    <tbody>
-                                        <tr>
-                                            <td>Supplier</td><td><div class="mx-2">:</div></td>
-                                            <td class="py-1">
-                                                <input type="text" name="supplier_nama" id="barang_new-supplier_nama" placeholder="nama supplier..." class="text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
-                                                <input type="hidden" name="supplier_id" id="barang_new-supplier_id">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Nama</td><td><div class="mx-2">:</div></td>
-                                            <td>
-                                                <input type="text" name="barang_nama" id="barang_new-barang_nama" placeholder="nama barang ..." class="w-full text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
-                                                <input type="hidden" name="barang_id" id="barang_new-barang_id">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3">
-                                                <div class="my-5 border rounded p-1 border-sky-500">
-                                                    <div class="my-2 font-semibold text-center">Satuan - Jumlah - Harga per Satuan - Harga Total:</div>
-                                                    <table class="w-full">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Satuan Utama</td><td><div class="mx-1">:</div></td><td><input type="text" name="satuan_main" class="text-xs rounded p-1 w-3/4"></td>
-                                                                <td>Jumlah</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" name="jumlah_main" id="barang_new-jumlah_main" class="text-xs rounded p-1 w-3/4" oninput="count_harga_total_main()">
-                                                                </td>
-                                                                <td>Harga</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" id="barang_new-harga_main" class="text-xs rounded p-1" onchange="formatNumber(this, 'barang_new-harga_main-real')">
-                                                                    <input type="hidden" name="harga_main" id="barang_new-harga_main-real">
-                                                                </td>
-                                                                <td>Harga Total</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" name="harga_total_main" id="barang_new-harga_total_main" class="text-xs rounded p-1" onchange="formatNumber(this, 'barang_new-harga_total_main-real');copy_to_harga_sub();count_harga_total_sub()">
-                                                                    <input type="hidden" name="harga_total_main" id="barang_new-harga_total_main-real">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Satuan Sub</td><td><div class="mx-1">:</div></td><td><input type="text" name="satuan_sub" class="text-xs rounded p-1 w-3/4"></td>
-                                                                <td>Jumlah</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" name="jumlah_sub" id="barang_new-jumlah_sub" class="text-xs rounded p-1 w-3/4" oninput="count_harga_total_sub()">
-                                                                </td>
-                                                                <td>Harga</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" id="barang_new-harga_sub" class="text-xs rounded p-1" onchange="formatNumber(this, 'barang_new-harga_sub-real');count_harga_total_sub()">
-                                                                    <input type="hidden" name="harga_sub" id="barang_new-harga_sub-real">
-                                                                </td>
-                                                                <td>Harga Total</td><td><div class="mx-1">:</div></td>
-                                                                <td>
-                                                                    <input type="text" name="harga_total_sub" id="barang_new-harga_total_sub" class="text-xs rounded p-1" onchange="formatNumber(this, 'barang_new-harga_total_sub-real');">
-                                                                    <input type="hidden" name="harga_total_sub" id="barang_new-harga_total_sub-real">
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="align-top">
-                                            <td>Ket. (opt.)</td><td><div class="mx-2">:</div></td>
-                                            <td class="py-1"><textarea name="keterangan" id="" cols="40" rows="3" placeholder="keterangan..." class="rounded text-xs p-1"></textarea></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="flex justify-center mt-3">
-                                    <button type="submit" class="border-2 border-indigo-300 bg-indigo-200 text-indigo-600 rounded-lg font-semibold py-1 px-3 hover:bg-indigo-300">+ Barang</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- END - FORM_NEW_BARANG -->
-                    
         
                     <!-- <div class="collapse bg-base-200">
                         <input type="checkbox" />

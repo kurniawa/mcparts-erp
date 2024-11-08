@@ -6,7 +6,7 @@ const props = defineProps({
     titles: Array,
 });
 
-console.log(props.tabs);
+// console.log(props.tabs);
 </script>
 
 <template>

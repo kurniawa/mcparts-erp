@@ -3,7 +3,8 @@ import { reactive, ref } from 'vue';
 
 const props = defineProps({
     source: Object,
-    index: Number || null
+    index: Number || null,
+    placeholder: String,
 });
 let key_name = ref('');
 let key_id = ref('');
@@ -43,7 +44,7 @@ function chooseItem (item) {
 </script>
 <template>
     <div class="relative">
-        <input type="text" v-model="key_name" @input="autoComplete" placeholder="nama results..." class="text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+        <input type="text" v-model="key_name" @input="autoComplete" :placeholder="placeholder" class="text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 w-full placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
         <input type="hidden" v-model="key_id">
         <div v-show="show_results" class="absolute z-20 bg-white border-x w-full">
             <div v-for="(item, index) in autocomplete_data.results" class="p-2 border-y hover:bg-slate-100 hover:cursor-pointer" @click="$emit('item', {res:item, index:props.index});chooseItem(item)">{{ item.name }}</div>

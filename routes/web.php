@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InitialCommand;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +34,14 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelians/{pembelian}/edit', 'edit')->name('pembelians.edit')->middleware(['auth', 'verified']);
     Route::post('/pembelians/{pembelian}/delete', 'delete')->name('pembelians.delete')->middleware(['auth', 'verified']);
     Route::post('/pembelians/store', 'store')->name('pembelians.store')->middleware(['auth', 'verified']);
-    Route::get('/barangs', 'index')->name('barangs.index')->middleware(['auth', 'verified']);
+});
 
+Route::controller(ProdukController::class)->group(function () {
+    Route::get('/produks/index', 'index')->name('produks.index')->middleware(['auth', 'verified']);
+    Route::get('/produks/{produk}/show', 'show')->name('produks.show')->middleware(['auth', 'verified']);
+    Route::get('/produks/{produk}/edit', 'edit')->name('produks.edit')->middleware(['auth', 'verified']);
+    Route::post('/produks/{produk}/delete', 'delete')->name('produks.delete')->middleware(['auth', 'verified']);
+    Route::post('/produks/store', 'store')->name('produks.store')->middleware(['auth', 'verified']);
 });
 
 Route::controller(InitialCommand::class)->group(function () {

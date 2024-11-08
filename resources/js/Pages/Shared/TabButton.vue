@@ -18,10 +18,9 @@ const classes = computed(()=>props.active
 
 </script>
 <template>
-    <button :class="classes" v-if="props.active">
+    <button :class="classes">
         <Link :href="props.href">
             <slot />
         </Link>
     </button>
-    <button v-else :class="classes"><slot /></button>
 </template>
