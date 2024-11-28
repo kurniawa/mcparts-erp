@@ -1,4 +1,10 @@
-<script setup></script>
+<script setup>
+import { formatCurrencyIDw100 } from '../../../../public/js/functions';
+
+const props = defineProps({
+    pembelian_total_suppliers: Object,
+})
+</script>
 <template>
     <!-- PEMBELIAN TOTAL SUPPLIER -->
     <div class="text-xs">
@@ -10,17 +16,17 @@
                         <div class="flex justify-between font-semibold">
                             <span>Rp</span>
                             <!-- {{ dump($pembelian_total_supplier[$i]->harga_total) }} -->
-                            {{ pembelian_total_supplier.pembelian_total }}
+                            {{ formatCurrencyIDw100(pembelian_total_supplier.pembelian_total) }}
                         </div>
                         <div class="flex justify-between text-emerald-500">
                             <span>Rp</span>
                             <!-- {{ dump($pembelian_total_supplier[$i]->harga_total) }} -->
-                            {{ pembelian_total_supplier.pembelian_lunas }}
+                            {{ formatCurrencyIDw100(pembelian_total_supplier.pembelian_lunas) }}
                         </div>
                         <div class="flex justify-between text-rose-500">
                             <span>Rp</span>
                             <!-- {{ dump($pembelian_total_supplier[$i]->harga_total) }} -->
-                            {{ pembelian_total_supplier.pembelian_belum_lunas }}
+                            {{ formatCurrencyIDw100(pembelian_total_supplier.pembelian_belum_lunas) }}
                         </div>
                     </td>
                 </tr>

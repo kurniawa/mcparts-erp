@@ -98,6 +98,7 @@ const updateClearanceLevel = () => {
             <li>php artisan db:seed --class=UpdateStatusBayarSeeder</li>
             <li>php artisan db:seed --class=UpdateJumlahMainSubSeeder</li>
             <li class="p-2">
+                <span class="font-bold">Untuk nomor 5 ke atas sudah diatasi dengan php artisan migrate diatas!</span>
                 Pada tabel nota:
                 <ul class="list-disc list-inside">
                     <li>add column sisa_bayar decimal(15, 2), nullable, meski harusnya default sama dengan harga_total</li>

@@ -394,6 +394,7 @@ class PembelianController extends Controller
         // dd($pembelians);
         // dump($from);
         // dd($until);
+        // dd($pembelian_total_suppliers);
         return Inertia::render('Pembelians/Index', $data);
     }
 

@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Table */
+.table-nice {
+    @apply shadow-lg rounded-lg;
+}
+.table-nice tr {
+    @apply border-b;
+}
+.table-nice tr th {
+    @apply py-2 bg-slate-50 text-slate-600;
+}
+.table-nice tr td {
+    @apply py-2.5 px-3 text-slate-700;
+}

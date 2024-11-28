@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\InitialCommand;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\ProdukController;
@@ -34,6 +35,14 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelians/{pembelian}/edit', 'edit')->name('pembelians.edit')->middleware(['auth', 'verified']);
     Route::post('/pembelians/{pembelian}/delete', 'delete')->name('pembelians.delete')->middleware(['auth', 'verified']);
     Route::post('/pembelians/store', 'store')->name('pembelians.store')->middleware(['auth', 'verified']);
+});
+
+Route::controller(BarangController::class)->group(function () {
+    Route::get('/barangs/index', 'index')->name('barangs.index')->middleware(['auth', 'verified']);
+    Route::get('/barangs/{barang}/show', 'show')->name('barangs.show')->middleware(['auth', 'verified']);
+    Route::get('/barangs/{barang}/edit', 'edit')->name('barangs.edit')->middleware(['auth', 'verified']);
+    Route::post('/barangs/{barang}/delete', 'delete')->name('barangs.delete')->middleware(['auth', 'verified']);
+    Route::post('/barangs/store', 'store')->name('barangs.store')->middleware(['auth', 'verified']);
 });
 
 Route::controller(ProdukController::class)->group(function () {

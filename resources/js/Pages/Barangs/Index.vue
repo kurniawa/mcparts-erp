@@ -3,8 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { onMounted, reactive, ref, toRaw } from 'vue';
 import Tab from '../Shared/Tab.vue';
-import AddProduk from './AddProduk.vue';
-import Products from './Products.vue';
+import AddBarang from './AddBarang.vue';
+import Barangs from './Barangs.vue';
 
 // const jumlah_hari = ref(32);
 const date_now = new Date();
@@ -16,11 +16,11 @@ const year_now = date_now.getFullYear();
 // console.log(year_now);
 const props = defineProps({
     session: Object,
-    types: Object,
-    produks: Object,
+    suppliers: Object,
+    barangs: Object,
     hargas: Object,
     label_suppliers: Object,
-    label_products: Object,
+    label_barangs: Object,
 })
 // console.log(props.from);
 // console.log(new Date(props.from).toLocaleDateString("id-ID"));
@@ -28,27 +28,26 @@ const props = defineProps({
 // console.log(props.from.split(" "));
 
 const form = useForm({});
-const show_produk_items = reactive([]);
 
-// console.log(show_pembelian_items);
-onMounted(() => {
-    props.produks.forEach((produk, index) => {
-        show_produk_items[index] = 'opacity-0 ';
-    });
-    // console.log(show_pembelian_items);
-    // console.log(show_pembelian_items[0]);
-});
+// // console.log(show_pembelian_items);
+// onMounted(() => {
+//     props.barangs.forEach((produk, index) => {
+//         show_produk_items[index] = 'opacity-0 ';
+//     });
+//     // console.log(show_pembelian_items);
+//     // console.log(show_pembelian_items[0]);
+// });
 
 const submitBarangStore = () => {}
-let show_add_produk = ref(false);
+let show_add_barang = ref(false);
 let class_for_btn_add_produk = ref('border rounded border-indigo-300 text-indigo-500 font-semibold px-3 py-1');
 const toggleAddPembelian = () => {
-    // console.log(show_add_produk);
-    if (show_add_produk.value) {
-        show_add_produk.value = false;
+    // console.log(show_add_barang);
+    if (show_add_barang.value) {
+        show_add_barang.value = false;
         class_for_btn_add_produk.value = 'border rounded border-indigo-300 text-indigo-500 font-semibold px-3 py-1';
     } else {
-        show_add_produk.value = true;
+        show_add_barang.value = true;
         class_for_btn_add_produk.value = 'border rounded border-indigo-300 text-indigo-500 bg-indigo-200 font-semibold px-3 py-1';
     }
 }
@@ -62,22 +61,22 @@ const toggleAddPembelian = () => {
         </template> -->
 
         <div class="relative rounded">
-            <Tab :tabs="['pembelians.index', 'produks.index']" :titles="['Pembelian', 'Barang']">
+            <Tab :tabs="['pembelians.index', 'barangs.index']" :titles="['Pembelian', 'Barang']">
                 <div class="relative bg-white border-t z-10">
                     <div class="">
                         <!-- SEARCH / FILTER -->
                         
                         <!-- END - SEARCH / FILTER -->
                         <div class="flex mt-2 text-xs ml-3">
-                            <button type="button" :class="class_for_btn_add_produk" @click="toggleAddPembelian">+ Tambah Produk</button>
+                            <button type="button" :class="class_for_btn_add_produk" @click="toggleAddPembelian">+ Tambah Barang</button>
                         </div>
                     </div>
                     <!-- FORM_NEW_BARANG -->
-                     <div v-if="show_add_produk">
-                         <AddProduk :label_suppliers="label_suppliers" :label_products="label_products"/>
+                     <div v-if="show_add_barang">
+                         <AddBarang :label_suppliers="label_suppliers" :label_barangs="label_barangs"/>
                      </div>
                     <!-- END - FORM_NEW_BARANG -->
-                     <Products :types="types" :products="produks" :prices="hargas" />
+                     <Barangs :barangs="barangs" :suppliers="suppliers" />
                     
                     <!-- <Pembelians :pembelians="pembelians" :pembelian_barangs_all="pembelian_barangs_all" :alamats="alamats" :grand_total="grand_total" :lunas_total="lunas_total" :from="from" :until="until"></Pembelians> -->
         

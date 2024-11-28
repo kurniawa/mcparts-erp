@@ -5,6 +5,8 @@ import { onMounted, reactive, ref, toRaw } from 'vue';
 import Pembelians from './Pembelians.vue';
 import AddPembelian from './AddPembelian.vue';
 import Tab from '../Shared/Tab.vue';
+import PembelianTotalBaseOnSupplier from './PembelianTotalBaseOnSupplier.vue';
+import { formatNumberDecIDw100 } from '../../../../public/js/functions';
 
 // const jumlah_hari = ref(32);
 const date_now = new Date();
@@ -70,7 +72,7 @@ const showPembelianItems = (id) => {
 
 const submitBarangStore = () => {}
 let show_add_pembelian = ref(false);
-let class_for_btn_add_pembelian = ref('border rounded border-emerald-300 text-emerald-500 font-semibold px-3 py-1 ml-1');
+let class_for_btn_add_pembelian = ref('border rounded border-emerald-300 text-emerald-500 font-semibold px-3 py-1');
 const toggleAddPembelian = () => {
     // console.log(show_add_pembelian);
     if (show_add_pembelian.value) {
@@ -79,6 +81,19 @@ const toggleAddPembelian = () => {
     } else {
         show_add_pembelian.value = true;
         class_for_btn_add_pembelian.value = 'border rounded border-emerald-300 text-emerald-500 bg-emerald-200 font-semibold px-3 py-1';
+    }
+}
+
+let show_filter = ref(false);
+let class_for_btn_filter = ref('border rounded border-orange-300 text-orange-500 font-semibold px-3 py-1');
+const toggleFilter = () => {
+    // console.log(show_filter);
+    if (show_filter.value) {
+        show_filter.value = false;
+        class_for_btn_filter.value = 'border rounded border-orange-300 text-orange-500 font-semibold px-3 py-1';
+    } else {
+        show_filter.value = true;
+        class_for_btn_filter.value = 'border rounded border-orange-300 text-orange-500 bg-orange-200 font-semibold px-3 py-1';
     }
 }
 
@@ -91,16 +106,23 @@ const toggleAddPembelian = () => {
         </template> -->
 
         <div class="relative rounded">
-            <Tab :tabs="['pembelians.index', 'produks.index']" :titles="['Pembelian', 'Barang']">
+            <Tab :tabs="['pembelians.index', 'barangs.index']" :titles="['Pembelian', 'Barang']">
                 <div class="relative bg-white border-t z-10">
-                    <div class="">
+                    <div class="flex gap-1 text-xs ml-2 mt-2">
                         <!-- SEARCH / FILTER -->
-                        
+                        <div>
+                            <button type="button" :class="class_for_btn_filter" @click="toggleFilter">Filter</button>
+                        </div>
                         <!-- END - SEARCH / FILTER -->
-                        <div class="flex mt-2 text-xs ml-2">
+                        <div>
                             <button type="button" :class="class_for_btn_add_pembelian" @click="toggleAddPembelian">+ Tambah Pembelian</button>
                         </div>
                     </div>
+                    <!-- FORM FILTER -->
+                     <div v-if="show_filter">
+
+                     </div>
+                    <!-- END - FORM FILTER -->
                     <!-- FORM_NEW_PEMBELIAN -->
                      <div v-if="show_add_pembelian">
                          <AddPembelian :label_suppliers="label_suppliers" :label_barang="label_barang"/>
@@ -115,7 +137,10 @@ const toggleAddPembelian = () => {
                         </div>
                     </div> -->
                     
-                    <Pembelians :pembelians="pembelians" :pembelian_barangs_all="pembelian_barangs_all" :alamats="alamats" :grand_total="grand_total" :lunas_total="lunas_total" :from="from" :until="until"></Pembelians>
+                    <div class="lg:flex lg:gap-1 lg:justify-center mt-2">
+                        <Pembelians :pembelians="pembelians" :pembelian_barangs_all="pembelian_barangs_all" :alamats="alamats" :grand_total="grand_total" :lunas_total="lunas_total" :from="from" :until="until"></Pembelians>
+                        <PembelianTotalBaseOnSupplier :pembelian_total_suppliers="pembelian_total_suppliers" />
+                    </div>
         
                     <!-- PRINT_OUT -->
                     <div class="hidden">
@@ -142,8 +167,8 @@ const toggleAddPembelian = () => {
                                             <td>{{ pembelian.nomor_nota }}</td>
                                             <td>{{ pembelian_barang.barang_nama }}</td>
                                             <td>{{ pembelian.keterangan_bayar }}</td>
-                                            <td>{{ pembelian_barang.jumlah_sub }} {{ pembelian_barang.satuan_sub }}</td>
-                                            <td>{{ pembelian_barang.jumlah_main }} {{ pembelian_barang.satuan_main }}</td>
+                                            <td>{{ formatNumberDecIDw100(pembelian_barang.jumlah_sub) }} {{ pembelian_barang.satuan_sub }}</td>
+                                            <td>{{ formatNumberDecIDw100(pembelian_barang.jumlah_main) }} {{ pembelian_barang.satuan_main }}</td>
                                             <td>{{ pembelian_barang.harga_main }}</td>
                                             <td>{{ pembelian_barang.harga_t }}</td>
                                         </tr>
