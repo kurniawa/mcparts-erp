@@ -7,6 +7,7 @@ import AddPembelian from './AddPembelian.vue';
 import Tab from '../Shared/Tab.vue';
 import PembelianTotalBaseOnSupplier from './PembelianTotalBaseOnSupplier.vue';
 import { formatNumberDecIDw100 } from '../../../../public/js/functions';
+import FilterPembelians from './FilterPembelians.vue';
 
 // const jumlah_hari = ref(32);
 const date_now = new Date();
@@ -119,9 +120,7 @@ const toggleFilter = () => {
                         </div>
                     </div>
                     <!-- FORM FILTER -->
-                     <div v-if="show_filter">
-
-                     </div>
+                     <FilterPembelians />
                     <!-- END - FORM FILTER -->
                     <!-- FORM_NEW_PEMBELIAN -->
                      <div v-if="show_add_pembelian">
