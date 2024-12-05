@@ -8,6 +8,7 @@ import Tab from '../Shared/Tab.vue';
 import PembelianTotalBaseOnSupplier from './PembelianTotalBaseOnSupplier.vue';
 import { formatNumberDecIDw100 } from '../../../../public/js/functions';
 import FilterPembelians from './FilterPembelians.vue';
+import * as XLSX from "xlsx";
 
 // const jumlah_hari = ref(32);
 const date_now = new Date();
@@ -98,6 +99,20 @@ const toggleFilter = () => {
     }
 }
 
+function tableToExcel(table_id, filename) {
+    // Ambil elemen HTML tabel
+    const table = document.getElementById(table_id);
+
+    // Konversi tabel menjadi worksheet
+    const worksheet = XLSX.utils.table_to_sheet(table);
+
+    // Buat workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Ekspor file Excel
+    XLSX.writeFile(workbook, filename);
+}
 </script>
 <template>
     <AuthenticatedLayout>
@@ -120,7 +135,9 @@ const toggleFilter = () => {
                         </div>
                     </div>
                     <!-- FORM FILTER -->
-                     <FilterPembelians />
+                     <div v-if="show_filter">
+                         <FilterPembelians :label_suppliers="label_suppliers"/>
+                     </div>
                     <!-- END - FORM FILTER -->
                     <!-- FORM_NEW_PEMBELIAN -->
                      <div v-if="show_add_pembelian">
@@ -135,7 +152,13 @@ const toggleFilter = () => {
                             <p>hello</p>
                         </div>
                     </div> -->
-                    
+                    <div class="mt-2 ml-2">
+                        <button class="rounded bg-emerald-200 text-emerald-500 p-1" @click="tableToExcel('pembelian-to-excel', 'pembelians.xlsx')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                            </svg>
+                        </button>
+                    </div>
                     <div class="lg:flex lg:gap-1 lg:justify-center mt-2">
                         <Pembelians :pembelians="pembelians" :pembelian_barangs_all="pembelian_barangs_all" :alamats="alamats" :grand_total="grand_total" :lunas_total="lunas_total" :from="from" :until="until"></Pembelians>
                         <PembelianTotalBaseOnSupplier :pembelian_total_suppliers="pembelian_total_suppliers" />

@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import {formatCurrencyIDw100, formatNumberDecIDw100} from '../../../../public/js/functions.js';
-import * as XLSX from "xlsx";
 
 const props = defineProps({
     pembelians: Object,
@@ -25,39 +24,17 @@ const deletePembelian = (id) => {
     }
 }
 
-function tableToExcel(table_id, filename) {
-    // Ambil elemen HTML tabel
-    const table = document.getElementById(table_id);
-
-    // Konversi tabel menjadi worksheet
-    const worksheet = XLSX.utils.table_to_sheet(table);
-
-    // Buat workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-    // Ekspor file Excel
-    XLSX.writeFile(workbook, filename);
-}
-
 </script>
 <template>
     <div>
-        <div>
-            <button class="rounded bg-emerald-200 text-emerald-500 p-1" @click="tableToExcel('pembelian-to-excel', 'pembelians.xlsx')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                </svg>
-            </button>
-        </div>
-        <div class="text-slate-400 font-semibold">rentang waktu: {{ from_dateOnly }} - {{ until_dateOnly }}</div>
+        <div class="text-slate-400 text-xs font-semibold">rentang waktu: {{ from_dateOnly }} - {{ until_dateOnly }}</div>
         <div class="text-xs">
             <div class="">
-                <div class="grid grid-cols-12">
+                <div class="grid grid-cols-12 gap-1 font-bold text-sm">
                     <div class="col-span-2">Grand Total</div>
-                    <div class="col-span-4">{{ formatCurrencyIDw100(grand_total - lunas_total) }}</div>
-                    <div class="col-span-3">{{ formatCurrencyIDw100(lunas_total) }}</div>
-                    <div class="col-span-3">{{ formatCurrencyIDw100(grand_total) }}</div>
+                    <div class="col-span-4 bg-pink-200">{{ formatCurrencyIDw100(grand_total - lunas_total) }}</div>
+                    <div class="col-span-3 bg-emerald-200">{{ formatCurrencyIDw100(lunas_total) }}</div>
+                    <div class="col-span-3 bg-orange-200">{{ formatCurrencyIDw100(grand_total) }}</div>
                 </div>    
             </div>
             <div v-for="(pembelian, index) in pembelians">
