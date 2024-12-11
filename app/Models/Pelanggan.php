@@ -71,6 +71,35 @@ class Pelanggan extends Model
         ];
     }
 
+    static function get_data($pelanggan) {
+        // Data Pelanggan
+        $nama = $pelanggan->nama;
+
+        // Data Pelanggan - Alamat
+        $alamat_id=$long=$short=null;
+        $pelanggan_alamat=PelangganAlamat::where('pelanggan_id',$pelanggan['id'])->where('tipe','UTAMA')->first();
+        if ($pelanggan_alamat!==null) {
+            $alamat=Alamat::find($pelanggan_alamat['alamat_id']);
+            $long=$alamat['long'];
+            $short=$alamat['short'];
+        }
+        // Data Pelanggan - Kontak
+        $kontak_id = $kontak = null;
+        $kontak=PelangganKontak::where('pelanggan_id',$pelanggan['id'])->where('is_aktual','yes')->first();
+        if ($kontak !== null) {
+            $kontak_id = $kontak->id;
+        }
+
+        return [
+            "nama" => $nama,
+            "alamat_id" => $alamat_id,
+            "long" => $long,
+            "short" => $short,
+            "kontak" => $kontak,
+            "kontak_id" => $kontak_id,
+        ];
+    }
+
     static function data_pelanggan_reseller_ekspedisi_transit($nota) {
         // PELANGGAN
         $alamat_id = null;

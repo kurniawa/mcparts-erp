@@ -8,6 +8,7 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RouteApiController;
 use App\Http\Controllers\SpkController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -56,8 +57,10 @@ Route::controller(SpkController::class)->group(function(){
     Route::post('/spks/{spk}/{spk_produk}/spk_produk_edit_keterangan','spk_produk_edit_keterangan')->name('spks.spk_produk_edit_keterangan')->middleware('auth');
     Route::post('/spks/{spk}/{spk_produk_nota}/spk_produk_nota_edit_keterangan','spk_produk_nota_edit_keterangan')->name('spks.spk_produk_nota_edit_keterangan')->middleware('auth');
     
-    // API - Saat ini belum digunakan
-    Route::get('/api/user/{user}/get_user_profile_picture_path','api_get_user_profile_picture_path')->name('spks.api_get_user_profile_picture_path')->middleware('auth');
+});
+
+Route::controller(RouteApiController::class)->group(function() {
+    Route::get('/api/search_products','api_search_products')->name('spks.api_search_products')->middleware('auth');
 });
 
 Route::controller(PelangganController::class)->group(function(){

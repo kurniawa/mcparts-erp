@@ -5,8 +5,9 @@ import { Head, Link } from "@inertiajs/vue3";
 import SPKs from "./Home/SPKs.vue";
 import Tab from "./Shared/Tab.vue";
 import AddSPK from "./Home/AddSPK.vue";
+import { watch } from "vue";
 
-defineProps({
+const props = defineProps({
     canLogin: {
         type: Boolean,
     },
@@ -33,6 +34,7 @@ defineProps({
     label_pelanggans: {type: Object},
     label_produks: {type: Object},
 })
+
 </script>
 
 <template>

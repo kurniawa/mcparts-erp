@@ -2,26 +2,37 @@
 import { useForm } from '@inertiajs/vue3';
 import SimpleDatePicker from '../Shared/SimpleDatePicker.vue';
 import AutoComplete from '../Shared/AutoComplete.vue';
+import AddSPKItem from './AddSPKItem.vue';
+import { ref, watch } from 'vue';
+import { isEmpty } from 'lodash';
 
 const props = defineProps({
-    label_pelanggans: {type: Object}
+    label_pelanggans: {type: Object},
 });
 
 // console.log(props.label_pelanggans);
-
 const date = new Date();
 const form = useForm({
     day: date.getDate(),
     month: date.getMonth() + 1,
     year: date.getFullYear(),
     use_date: true,
+    keterangan: null,
     pelanggan: {
         id: null,
         nama: null,
     },
     reseller: {
         id: null,
-    }
+    },
+    SPKItems: []
+});
+
+// console.log(form.errors);
+// console.log(isEmpty(form.errors));
+
+watch(form, (value) => {
+    // console.log(value.errors);
 });
 
 function emitDate(chosen_date) {
@@ -49,7 +60,41 @@ function chooseCustomer (chosen) {
     // console.log(form);
 }
 
-function StoreSPK() {
+// let containerSPKItems = ref([])
+let idContainerSPKItem = ref(0)
+function add_SPK_Item() {
+    // containerSPKItems.value.push({id:idContainerSPKItem.value});
+    form.SPKItems.push({
+        componentID:idContainerSPKItem.value,
+        itemID: null,
+        itemName: null,
+        jumlahItem: null,
+        keterangan: null,
+    });
+    idContainerSPKItem.value++;
+    // console.log(containerSPKItems.value);
+}
+
+function onChosenSPKItem(chosenSPKItem) {
+    const indexToUpdate = form.SPKItems.findIndex(SPKItem => SPKItem.componentID === chosenSPKItem.iSPKItem);
+    form.SPKItems[indexToUpdate].itemID = chosenSPKItem.itemID;
+    form.SPKItems[indexToUpdate].itemName = chosenSPKItem.itemName;
+    form.SPKItems[indexToUpdate].jumlahItem = chosenSPKItem.jumlahItem;
+    form.SPKItems[indexToUpdate].keterangan = chosenSPKItem.keterangan;
+    // console.log(form.SPKItems);
+}
+
+function onRemoveSPKItem(index) {
+    // console.log(index)
+    // console.log(containerSPKItems);
+    const indexToRemove = form.SPKItems.findIndex(SPKItem => SPKItem.componentID === index);
+    form.SPKItems.splice(indexToRemove, 1);
+    // containerSPKItems.value.splice(index, 1);
+    // console.log(form.SPKItems);
+    // console.log(containerSPKItems);
+}
+
+function storeSPK() {
     form.post(route('spks.store'));
 }
 
@@ -58,7 +103,7 @@ function StoreSPK() {
 <template>
     <div id="form_new_spk" class="ml-2 w-full bg-white rounded-lg text-xs">
         <div class="flex">
-            <form @submit.prevent="StoreSPK" class="w-full">
+            <form @submit.prevent="storeSPK" class="w-full">
                 <div class="border rounded p-2">
                     <div class="border-b pb-3">
                         <table>
@@ -77,7 +122,7 @@ function StoreSPK() {
                                 </tr>
                                 <tr>
                                     <td>Ket. (opt.)</td><td><div class="mx-2">:</div></td>
-                                    <td class="py-1"><input type="text" name="keterangan" placeholder="judul/keterangan..." class="text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></td>
+                                    <td class="py-1"><input type="text" v-model="form.keterangan" placeholder="judul/keterangan..." class="text-xs rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -88,9 +133,12 @@ function StoreSPK() {
                                 <tr><th>Nama Item</th><th>Jumlah</th></tr>
                             </thead>
                             <tbody>
-                                <tr id="tr_add_item">
+                                <template v-for="(containerSPKItem) in form.SPKItems" :key="containerSPKItem.componentID">
+                                    <AddSPKItem :keySPKItem="containerSPKItem.componentID" @chosenSPKItem="onChosenSPKItem" @removeSPKItem="onRemoveSPKItem"/>
+                                </template>
+                                <tr>
                                     <td>
-                                        <button type="button" class="rounded bg-emerald-200 text-emerald-600" onclick="addSPKItem('tr_add_item','table_spk_items')">
+                                        <button type="button" class="rounded bg-emerald-200 text-emerald-600" @click="add_SPK_Item">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
@@ -99,6 +147,12 @@ function StoreSPK() {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="p-2 flex" v-if="!isEmpty(form.errors)">
+                    <div class="bg-red-200 border-2 border-red-500 rounded p-1">
+                        <span class="font-bold">Errors:</span>
+                        <div>{{ form.errors }}</div>
                     </div>
                 </div>
                 <div class="flex justify-center mt-3">

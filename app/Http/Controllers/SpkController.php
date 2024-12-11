@@ -42,67 +42,58 @@ class SpkController extends Controller
 
     function store(Request $request) {
         $post = $request->post();
-        // dump($post);
+        // dd($post);
         // VALIDASI DATA
-        $request->validate(['pelanggan_id'=>'required','produk_id'=>'required','produk_jumlah'=>'required']);
-        if (in_array(null,$post['produk_id'],true)) {
-            $request->validate(['error'=>'required'],['error.required'=>'produk_id']);
-        }
-        if (in_array(null,$post['produk_jumlah'],true) || in_array(0,$post['produk_jumlah'])) {
-            $request->validate(['error'=>'required'],['error.required'=>'jumlah']);
-        }
+        $request->validate([
+            'day' => 'required|numeric',
+            'month' => 'required|numeric',
+            'year' => 'required|numeric',
+            'pelanggan.id' => 'required|numeric',
+            'reseller.id' => 'nullable|numeric',
+            'reseller.nama' => 'nullable|string',
+            'SPKItems' => 'required|array|min:1',
+            'SPKItems.*.itemID' => 'required|numeric',
+            'SPKItems.*.itemName' => 'required|string',
+            'SPKItems.*.jumlahItem' => 'required|numeric|min:1',
+            'keterangan' => 'nullable|string',
+        ]);
         // END - VALIDASI DATA
         $success_ = "";
         $user = Auth::user();
+        // dd($user);
         // SPK - CREATE dulu, supaya dapet ID nya
-        $pelanggan = Pelanggan::find($post['pelanggan_id']);
-        // Data Pelanggan - Alamat
-        $cust_long=$cust_short=null;
-        $pelanggan_alamat=PelangganAlamat::where('pelanggan_id',$pelanggan['id'])->where('tipe','UTAMA')->first();
-        if ($pelanggan_alamat!==null) {
-            $alamat=Alamat::find($pelanggan_alamat['alamat_id']);
-            $cust_long=$alamat['long'];
-            $cust_short=$alamat['short'];
-        }
-        // Data Pelanggan - Kontak
-        $cust_kontak=PelangganKontak::where('pelanggan_id',$pelanggan['id'])->where('is_aktual','yes')->first();
-
+        $pelanggan = Pelanggan::find($post['pelanggan']['id']);
+        $data_pelanggan = Pelanggan::get_data($pelanggan);
         // Data Reseller
-        $reseller=$reseller_id=$reseller_nama=$reseller_long=$reseller_short=$reseller_kontak=null;
-
-        if ($post['reseller_id']!==null) {
-            $reseller=Pelanggan::find($post['reseller_id']);
-            $reseller_id=$reseller['id'];
-            $reseller_nama=$reseller['nama'];
-
-            // Data Reseller - Alamat
-            $reseller_alamat=PelangganAlamat::where('pelanggan_id',$reseller_id)->where('tipe','UTAMA')->first();
-            if ($reseller_alamat!==null) {
-                $alamat_reseller=Alamat::find($reseller_alamat['alamat_id']);
-                $reseller_long=$alamat_reseller['long'];
-                $reseller_short=$alamat_reseller['short'];
-            }
-            // Data Reseller - Kontak
-            $reseller_kontak=PelangganKontak::where('pelanggan_id',$reseller_id)->where('is_aktual','yes')->first();
+        $reseller = null;
+        $reseller_id = null;
+        $reseller_nama = null;
+        $data_reseller = null;
+        if ($post['reseller']['id']) {
+            $reseller=Pelanggan::find($post['reseller']['id']);
+            $reseller_id = $reseller->id;
+            $reseller_nama = $reseller->nama;
+            $data_reseller = Pelanggan::get_data($reseller);
         }
         $created_at = date('Y-m-d', strtotime("$post[year]-$post[month]-$post[day]")) . " " . date("H:i:s");
         $new_spk = Spk::create([
-            'pelanggan_id'=>$post['pelanggan_id'],
-            'reseller_id'=>$post['reseller_id'],
+            'pelanggan_id'=>$pelanggan->id,
+            'reseller_id'=>$reseller_id,
             'keterangan'=>$post['keterangan'],
-            'created_by'=>$user['username'],
-            'updated_by'=>$user['username'],
+            'created_by'=>$user->username,
+            'updated_by'=>$user->username,
             'created_at'=>$created_at,
             'pelanggan_nama'=>$pelanggan->nama,
             // 'cust_long'=>$cust_long,
-            'cust_short'=>$cust_short,
+            'cust_short'=>$data_pelanggan['short'],
             // 'cust_kontak'=>$cust_kontak,
             'reseller_nama'=>$reseller_nama,
             // 'reseller_long'=>$reseller_long,
-            'reseller_short'=>$reseller_short,
+            'reseller_short'=>$data_reseller['short'],
             // 'reseller_kontak'=>$reseller_kontak,
         ]);
         // LANGSUNG UPDATE NO_SPK
+        // dd($new_spk);
         $new_spk->no_spk = "SPK-" . $new_spk->id;
         $new_spk->save();
         $success_ = "new_spk, updated";
@@ -110,28 +101,17 @@ class SpkController extends Controller
 
         // SPK PRODUKS
         $jumlah_total = 0;
-        foreach ($post['produk_id'] as $key => $produk_id) {
-            // $pelanggan_produk = PelangganProduk::where('pelanggan_id', $pelanggan->id)->where('produk_id', $produk_id)->latest()->first();
-            // $harga = null;
-            // if ($pelanggan_produk !== null) {
-            //     $harga = $pelanggan_produk->harga_khusus;
-            // } else {
-            //     $produk_harga = ProdukHarga::where('produk_id', $produk_id)->latest()->first();
-            //     $harga = $produk_harga->harga;
-            // }
-            // dd($post['produk_nama'][$key]);
+        foreach ($post['SPKItems'] as $key => $SPKItem) {
             SpkProduk::create([
                 'spk_id' => $new_spk->id,
-                'produk_id' => $produk_id,
-                'jumlah' => $post['produk_jumlah'][$key],
-                // 'jml_blm_sls' => $post['produk_jumlah'][$key],
-                'jumlah_total' => $post['produk_jumlah'][$key],
-                // 'harga' => $harga,
-                'keterangan' => $post['produk_keterangan'][$key],
+                'produk_id' => $SPKItem['itemID'],
+                'jumlah' => $SPKItem['jumlahItem'],
+                'jumlah_total' => $SPKItem['jumlahItem'],
+                'keterangan' => $SPKItem['keterangan'],
                 'status' => 'PROSES',
-                'nama_produk' => $post['produk_nama'][$key],
+                'nama_produk' => $SPKItem['itemName'],
             ]);
-            $jumlah_total += (int)$post['produk_jumlah'][$key];
+            $jumlah_total += (int)$SPKItem['jumlahItem'];
         }
         $success_ .= "- spk_produks";
         // END - SPK PRODUKS
