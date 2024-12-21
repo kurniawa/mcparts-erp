@@ -1,12 +1,12 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import AutoCompleteAPI from '../Shared/AutoCompleteAPI.vue';
 import { debounce, isEmpty } from 'lodash';
 
 const props = defineProps({
     keySPKItem: Number
 });
-
+const parametersToAssign = ['id', 'name'];
 const emits = defineEmits(['chosenSPKItem', 'removeSPKItem']);
 
 const jumlahItem = ref(0);
@@ -15,13 +15,13 @@ const chosenSPKItem = ref({});
 function chosenAutoCompleteItem(params) {
     // console.log(params);
     chosenSPKItem.value = {
-        itemID: params.itemID,
-        itemName: params.itemName,
+        itemID: params.id,
+        itemName: params.name,
         jumlahItem: jumlahItem.value,
         keterangan: keterangan.value,
         iSPKItem: props.keySPKItem
     } 
-    
+    // console.log(chosenSPKItem);
     emits('chosenSPKItem', chosenSPKItem.value);
 }
 
@@ -87,7 +87,7 @@ function removeSPKItem() {
                     </svg>
                 </button>
                 <div class="ml-2 w-full">
-                    <AutoCompleteAPI apiName="search_products" placeholder="nama produk" @paramsToEmit="chosenAutoCompleteItem" />
+                    <AutoCompleteAPI apiName="search_products" placeholder="nama produk" @paramsToEmit="chosenAutoCompleteItem" :parametersToAssign="parametersToAssign" />
                     <div v-if="showKeterangan" class="mt-1">
                         <textarea v-model="keterangan" @input="() => debouncedInitializeItemSum2()" cols="30" rows="3" class="border-slate-300 rounded-lg text-xs p-1 placeholder:text-slate-400" placeholder="keterangan item..."></textarea>
                     </div>

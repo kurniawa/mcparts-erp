@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { formatCurrencyIDw100 } from '../../../../public/js/functions.js';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
     spks: {type: Object},
@@ -12,6 +13,15 @@ const props = defineProps({
     col_spk_produk_notas: {type: Object},
     col_spk_produk_nota_srjalans: {type: Object},
 });
+
+// Setiap spk memiliki spk_items. Pada tampilan awal, spk_items hidden terlebih dahulu
+// onMounted berikut untuk membantu mekanisme untuk hidden spk_items
+const showSPKItems = ref([]);
+onMounted(() => {
+    if (props.spks.length) {
+        showSPKItems.value = Array(props.spks.length).fill(false);
+    }
+})
 
 // Preprocess formatted date
 const spksWithFormattedDate = computed(() =>
@@ -42,6 +52,10 @@ const spksWithFormattedDate = computed(() =>
 
 // console.log(props.profile_pictures_paths);
 // console.log(props.col_srjalans);
+function toggleSPKItems(SPKIndex) {
+    showSPKItems.value[SPKIndex] = !showSPKItems.value[SPKIndex];
+    // console.log(showSPKItems.value[SPKIndex]);
+}
 </script>
 
 <template>
@@ -56,10 +70,15 @@ const spksWithFormattedDate = computed(() =>
                     <div class="grid grid-cols-3 border-t pt-1">
                         <div class="grow">
                             <Link :href="route('spks.show', spk.id)" class="font-bold text-indigo-500">{{ spk.no_spk }}</Link>
-                            <div><Link :href="route('spks.show', spk.id)" class="text-indigo-800">{{ nama_pelanggans[index_spk] }}</Link></div>
+                            <div>
+                                <Link :href="route('spks.show', spk.id)" class="text-indigo-800">
+                                    <span v-if="spk.pxr_name">{{ spk.pxr_name }}</span>
+                                    <span v-else>{{ spk.pelanggan_nama }}</span>
+                                </Link>
+                            </div>
                             <div>
                                 <!-- <button :id="'toggle-spk-items-'$index_spk" class="rounded bg-white shadow drop-shadow" onclick="showDropdown(this.id, 'spk-items-{{ $key }}')"> -->
-                                <button :id="'toggle-spk-items-' + index_spk" class="rounded bg-white shadow drop-shadow" onclick="showDropdown(this.id, 'spk-items-{{ $key }}')">
+                                <button class="rounded bg-white shadow drop-shadow" @click="toggleSPKItems(index_spk)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                     </svg>
@@ -103,7 +122,7 @@ const spksWithFormattedDate = computed(() =>
                         </div>
                     </div>
                     <!-- SPK Items -->
-                    <div class="border rounded hidden px-1" id="spk-items-{{ $key }}">
+                    <div v-if="showSPKItems[index_spk]" class="border rounded px-1">
                         <table class="w-full text-xs">
                             <tr v-for="spk_produk in col_spk_produks[index_spk]">
                                 <td>{{ spk_produk.nama_produk }}</td>
@@ -126,14 +145,15 @@ const spksWithFormattedDate = computed(() =>
                         <div v-for="(nota, index_nota) in col_notas[index_spk]">
                             <div class="grid grid-cols-2 border-t pt-1">
                                 <div>
-                                    <a class="font-bold text-emerald-400" href="">{{ nota.no_nota }}</a>
+                                    <a class="font-bold text-emerald-400" :href="route('spks.show', spk.id)">{{ nota.no_nota }}</a>
                                     <div>
-                                        <button id="toggle-nota-items-{{ $key }}" class="rounded bg-white shadow drop-shadow" onclick="showDropdown(this.id, 'nota-items-{{ $key }}-{{ $key_nota }}')">
+                                        <button class="rounded bg-white shadow drop-shadow">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
                                         </button>
                                     </div>
+                                    <div class="font-bold" >{{ formatCurrencyIDw100(nota.harga_total) }}</div>
                                 </div>
                                 <div class="flex">
                                     <div class="flex">
@@ -181,11 +201,11 @@ const spksWithFormattedDate = computed(() =>
                             <div v-for="(srjalan, index_srjalan) in col_srjalans[index_spk][index_nota]">
                                 <div class="grid grid-cols-2 border-t pt-1">
                                     <div>
-                                        <a class="font-bold text-sky-400" href="#">{{ srjalan.no_srjalan }}</a>
+                                        <a class="font-bold text-sky-400" :href="route('spks.show', spk.id)">{{ srjalan.no_srjalan }}</a>
                                         <span>ekspedisi: </span><a href="#" class="text-sky-700">{{ srjalan.ekspedisi_nama }}</a>
                                         <span v-if="srjalan.transit_nama"> - transit: </span><a href="#" class="text-sky-700">{{ srjalan.transit_nama }}</a>
                                         <div>
-                                            <button id="toggle-srjalan-items-{{ $key }}-{{ $key2 }}-{{ $key_srjalan }}" class="rounded bg-white shadow drop-shadow" onclick="showDropdown(this.id, 'srjalan-items-{{ $key }}-{{ $key2 }}-{{ $key_srjalan }}')">
+                                            <button id="toggle-srjalan-items-{{ $key }}-{{ $key2 }}-{{ $key_srjalan }}" class="rounded bg-white shadow drop-shadow" @click="showDropdown(this.id, 'srjalan-items-{{ $key }}-{{ $key2 }}-{{ $key_srjalan }}')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                                 </svg>

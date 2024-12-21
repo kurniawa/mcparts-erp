@@ -61,6 +61,7 @@ Route::controller(SpkController::class)->group(function(){
 
 Route::controller(RouteApiController::class)->group(function() {
     Route::get('/api/search_products','api_search_products')->name('spks.api_search_products')->middleware('auth');
+    Route::get('/api/search-customers','api_search_customers')->name('spks.api_search_customers')->middleware('auth');
 });
 
 Route::controller(PelangganController::class)->group(function(){

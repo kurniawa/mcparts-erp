@@ -1,14 +1,10 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import SimpleDatePicker from '../Shared/SimpleDatePicker.vue';
-import AutoComplete from '../Shared/AutoComplete.vue';
 import AddSPKItem from './AddSPKItem.vue';
 import { ref, watch } from 'vue';
 import { isEmpty } from 'lodash';
-
-const props = defineProps({
-    label_pelanggans: {type: Object},
-});
+import AutoCompleteAPI from '../Shared/AutoCompleteAPI.vue';
 
 // console.log(props.label_pelanggans);
 const date = new Date();
@@ -27,6 +23,7 @@ const form = useForm({
     },
     SPKItems: []
 });
+const parametersToAssign = ['id', 'name', 'reseller_id'];
 
 // console.log(form.errors);
 // console.log(isEmpty(form.errors));
@@ -50,10 +47,10 @@ function chooseCustomer (chosen) {
     // form.supplier.id = result.res.id;
     // form.supplier.nama = result.res.name;
     // console.log(form.result);
-    form.pelanggan.id = chosen.res.id;
-    form.pelanggan.nama = chosen.res.name;
-    if (chosen.res.reseller_id) {
-        form.reseller.id = chosen.res.reseller_id;
+    form.pelanggan.id = chosen.id;
+    form.pelanggan.nama = chosen.name;
+    if (chosen.reseller_id) {
+        form.reseller.id = chosen.reseller_id;
     } else {
         form.reseller.id = null;
     }
@@ -97,11 +94,10 @@ function onRemoveSPKItem(index) {
 function storeSPK() {
     form.post(route('spks.store'));
 }
-
 </script>
 
 <template>
-    <div id="form_new_spk" class="ml-2 w-full bg-white rounded-lg text-xs">
+    <div id="form_new_spk" class="w-full bg-white rounded-lg text-xs">
         <div class="flex">
             <form @submit.prevent="storeSPK" class="w-full">
                 <div class="border rounded p-2">
@@ -117,7 +113,7 @@ function storeSPK() {
                                 <tr>
                                     <td>Untuk</td><td><div class="mx-2">:</div></td>
                                     <td class="py-1">
-                                        <AutoComplete :source="props.label_pelanggans" :index="null" @item="chooseCustomer" placeholder="nama pelanggan"></AutoComplete>
+                                        <AutoCompleteAPI  @paramsToEmit="chooseCustomer" placeholder="nama pelanggan" apiName="search-customers" :parametersToAssign="parametersToAssign" />
                                     </td>
                                 </tr>
                                 <tr>

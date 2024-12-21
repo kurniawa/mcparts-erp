@@ -1,6 +1,6 @@
 <script setup>
 import { DatePicker } from 'v-calendar';
-import { ref, watch, defineEmits } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     day: Number,

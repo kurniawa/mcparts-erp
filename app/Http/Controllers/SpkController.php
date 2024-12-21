@@ -69,11 +69,13 @@ class SpkController extends Controller
         $reseller_id = null;
         $reseller_nama = null;
         $data_reseller = null;
+        $pxr_name = null;
         if ($post['reseller']['id']) {
             $reseller=Pelanggan::find($post['reseller']['id']);
             $reseller_id = $reseller->id;
             $reseller_nama = $reseller->nama;
             $data_reseller = Pelanggan::get_data($reseller);
+            $pxr_name = $post['pelanggan']['nama'];
         }
         $created_at = date('Y-m-d', strtotime("$post[year]-$post[month]-$post[day]")) . " " . date("H:i:s");
         $new_spk = Spk::create([
@@ -84,6 +86,7 @@ class SpkController extends Controller
             'updated_by'=>$user->username,
             'created_at'=>$created_at,
             'pelanggan_nama'=>$pelanggan->nama,
+            'pxr_name'=>$pxr_name,
             // 'cust_long'=>$cust_long,
             'cust_short'=>$data_pelanggan['short'],
             // 'cust_kontak'=>$cust_kontak,

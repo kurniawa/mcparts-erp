@@ -33,7 +33,7 @@ class HomeController extends Controller
         $col_spk_produk_nota_srjalans = collect();
 
         
-        $selectRawSPK = "id, no_spk, pelanggan_nama, created_at, finished_at, created_by, updated_by,
+        $selectRawSPK = "id, no_spk, pelanggan_nama, pxr_name, created_at, finished_at, created_by, updated_by,
         DATE_FORMAT(created_at, '%d') as created_day, 
         DATE_FORMAT(created_at, '%m') as created_month, 
         DATE_FORMAT(created_at, '%y') as created_year,
@@ -54,64 +54,38 @@ class HomeController extends Controller
         DATE_FORMAT(created_at, '%m') as created_month, 
         DATE_FORMAT(created_at, '%y') as created_year";
 
-        if (isset($get['tipe_filter'])) {
-            if ($get['tipe_filter'] === 'spk') {
-                if ($get['nama_pelanggan'] !== null) {
-                    if ($get['from_day'] === null || $get['from_month'] === null || $get['from_year'] === null || $get['to_day'] === null || $get['to_month'] === null || $get['to_year'] === null) {
-                        // Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
-                        $spks = Spk::selectRaw($selectRawSPK)->where('pelanggan_id', $get['pelanggan_id'])->latest()->get();
-                        // End - Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
-                    } else {
-                        // Filter Berdasarkan Nama Pelanggan + Tanggal
-                        $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
-                        $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
-                        $spks = Spk::selectRaw($selectRawSPK)->where('pelanggan_id', $get['pelanggan_id'])->whereBetween('created_at', [$start_date, $end_date])->latest()->get();
-                        // End - Filter Berdasarkan Nama Pelanggan + Tanggal
-                    }
-                } else {
-                    // Filter hanya rentang waktu, tanpa nama_pelanggan
-                    if ($get['from_day'] === null || $get['from_month'] === null || $get['from_year'] === null || $get['to_day'] === null || $get['to_month'] === null || $get['to_year'] === null) {
-                        $request->validate(['error'=>'required'],['error.required'=>'customer,time_range']);
-                    } else {
-                        // Filter Berdasarkan Tanggal
-                        $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
-                        $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
-                        $spks = Spk::selectRaw($selectRawSPK)->whereBetween('created_at', [$start_date, $end_date])->latest()->get();
-                        // End - Filter Berdasarkan Tanggal
-                    }
-                    // END - Filter hanya rentang waktu, tanpa nama_pelanggan
-                }
-            } elseif ($get['tipe_filter'] === 'nota') {
-                if ($get['nama_pelanggan'] !== null) {
-                    if ($get['from_day'] === null || $get['from_month'] === null || $get['from_year'] === null || $get['to_day'] === null || $get['to_month'] === null || $get['to_year'] === null) {
-                        // Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
-                        $notas = Nota::where('pelanggan_id', $get['pelanggan_id'])->latest()->get();
+        // Kode dibawah ini akan dijalankan apabila user melakukan filtrasi
+        if (count($get)) {
+            // dd($get);
+            $filter_date = true;
+            if ($get['from_day'] === null || $get['from_month'] === null || $get['from_year'] === null || $get['to_day'] === null || $get['to_month'] === null || $get['to_year'] === null) {
+                $filter_date = false;
+            }
 
-                        // End - Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
-                    } else {
-                        // Filter Berdasarkan Nama Pelanggan + Tanggal
-                        $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
-                        $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
-                        $notas = Nota::where('pelanggan_id', $get['pelanggan_id'])->whereBetween('created_at', [$start_date, $end_date])->latest()->get();
-                        // End - Filter Berdasarkan Nama Pelanggan + Tanggal
-                    }
+            if ($get['customer']['nama'] !== null) {
+                if (!$filter_date) {
+                    // Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
+                    $spks = Spk::selectRaw($selectRawSPK)->where('pelanggan_id', $get['customer']['id'])->latest()->get();
+                    // End - Filter Berdasarkan Nama Pelanggan - Tanpa Tanggal
                 } else {
-                    // Filter hanya rentang waktu, tanpa nama_pelanggan
-                    if ($get['from_day'] === null || $get['from_month'] === null || $get['from_year'] === null || $get['to_day'] === null || $get['to_month'] === null || $get['to_year'] === null) {
-                        $request->validate(['error'=>'required'],['error.required'=>'customer || time_range']);
-                    } else {
-                        // Filter Berdasarkan Tanggal
-                        $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
-                        $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
-                        $notas = Nota::whereBetween('created_at', [$start_date, $end_date])->latest()->get();
-                        // End - Filter Berdasarkan Tanggal
-                    }
-                    // END - Filter hanya rentang waktu, tanpa nama_pelanggan
+                    // Filter Berdasarkan Nama Pelanggan + Tanggal
+                    $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
+                    $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
+                    $spks = Spk::selectRaw($selectRawSPK)->where('pelanggan_id', $get['customer']['id'])->whereBetween('created_at', [$start_date, $end_date])->latest()->get();
+                    // End - Filter Berdasarkan Nama Pelanggan + Tanggal
                 }
-            } elseif ($get['tipe_filter'] === 'sj') {
-                # code...
             } else {
-                $request->validate(['error'=>'required'],['error.required'=>'tipe_filter...']);
+                // Filter hanya rentang waktu, tanpa nama_pelanggan
+                if (!$filter_date) {
+                    $request->validate(['error'=>'required'],['error.required'=>'customer,time_range']);
+                } else {
+                    // Filter Berdasarkan Tanggal
+                    $start_date = "$get[from_year]-$get[from_month]-$get[from_day]";
+                    $end_date = "$get[to_year]-$get[to_month]-$get[to_day] 23:59:59";
+                    $spks = Spk::selectRaw($selectRawSPK)->whereBetween('created_at', [$start_date, $end_date])->latest()->get();
+                    // End - Filter Berdasarkan Tanggal
+                }
+                // END - Filter hanya rentang waktu, tanpa nama_pelanggan
             }
         } else {
             $spks = Spk::selectRaw($selectRawSPK)->latest()->limit(200)->get();
@@ -125,13 +99,14 @@ class HomeController extends Controller
             $col_spk_produks->push($spk_produks);
             // END - SPK Items
 
-            // NAMA PELANGGANS
-            $nama_pelanggan = $spk->pelanggan_nama;
-            if ($spk->reseller_nama !== null) {
-                $nama_pelanggan = "$spk->reseller_nama - $spk->pelanggan_nama";
-            }
-            $nama_pelanggans->push($nama_pelanggan);
-            // END - NAMA PELANGGANS
+            // // NAMA PELANGGANS
+            // $nama_pelanggan = $spk->pelanggan_nama;
+            // if ($spk->reseller_nama !== null) {
+            //     $nama_pelanggan = "$spk->reseller_nama - $spk->pelanggan_nama";
+            // }
+            // dump($spk->reseller_nama);
+            // $nama_pelanggans->push($nama_pelanggan);
+            // // END - NAMA PELANGGANS
             $spk_notas = SpkNota::where('spk_id', $spk->id)->get();
             $notas = collect();
             $arr_srjalans = collect();
@@ -179,10 +154,11 @@ class HomeController extends Controller
 
         // dump($col_notas);
         // dd($col_srjalans);
-        $label_pelanggans = Pelanggan::label_pelanggans();
-        $label_produks = Produk::select('id', 'nama as label', 'nama as value')->get();
+        // $label_pelanggans = Pelanggan::label_pelanggans();
+        // $label_produks = Produk::select('id', 'nama as label', 'nama as value')->get();
         // dump($spks);
         // dd($profile_pictures_paths);
+        // dd($nama_pelanggans);
         $data = [
             // 'goback' => 'home',
             // 'user_role' => $user_role,
@@ -194,8 +170,8 @@ class HomeController extends Controller
             'col_spk_produks' => $col_spk_produks,
             'col_spk_produk_notas' => $col_spk_produk_notas,
             'col_spk_produk_nota_srjalans' => $col_spk_produk_nota_srjalans,
-            'label_pelanggans' => $label_pelanggans,
-            'label_produks' => $label_produks,
+            // 'label_pelanggans' => $label_pelanggans,
+            // 'label_produks' => $label_produks,
             // 'user' => Auth::user(),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
